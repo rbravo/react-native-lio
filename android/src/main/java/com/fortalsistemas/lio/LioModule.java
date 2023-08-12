@@ -252,13 +252,12 @@ public class LioModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void requestPaymentCrashCredit(Integer amount, String orderId) {
-        Log.d(TAG, "[requestPaymentCrashCredit] VALOR:" + amount);
+    public void requestPaymentCredit(Integer amount, String orderId) {
+        Log.d(TAG, "[requestPaymentCredit] VALOR:" + amount);
         order = orderManager.createDraftOrder(orderId);
         order.addItem("sku", "ORDER", amount, 1, "unidade");
         orderManager.placeOrder(order);
         paymentType = "CreditCard";
-
 
         CheckoutRequest checkoutRequest;
 
@@ -522,6 +521,16 @@ public class LioModule extends ReactContextBaseJavaModule {
         byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
         Bitmap bitmapImage = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
         printerManager.printImage(bitmapImage, getTextAlign(style), createPrinterListener());
+    }
+
+    @ReactMethod
+    public void printQRCode(String code){
+        printerManager = new PrinterManager(this.reactContext);
+        HashMap<String, Integer> txStyle =  new HashMap<>();
+        txStyle.put(PrinterAttributes.KEY_ALIGN, PrinterAttributes.VAL_ALIGN_CENTER);
+        txStyle.put(PrinterAttributes.KEY_TYPEFACE, 0);
+        txStyle.put(PrinterAttributes.KEY_TEXT_SIZE, 20);
+        printerManager.printImage(QRCodeUtil.encodeAsBitmap(code,240,240),txStyle,printerListener);
     }
 
     @ReactMethod
