@@ -100,8 +100,8 @@ const printImage = (encodedImage, style = {}) => {
     return NativeModules.Lio.printImage(encodedImage, style)
 }
 
-const printQRCode = (text, size = 360) => {
-    return NativeModules.Lio.printQRCode(text, size)
+const printQRCode = (text, size = 360, style = {}) => {
+    return NativeModules.Lio.printQRCode(text, size, style)
 }
 
 const unbind = () => {
