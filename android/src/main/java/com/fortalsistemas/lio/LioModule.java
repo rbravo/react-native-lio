@@ -524,13 +524,13 @@ public class LioModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void printQRCode(String code){
+    public void printQRCode(String text, int size = 360){
         printerManager = new PrinterManager(this.reactContext);
         HashMap<String, Integer> txStyle =  new HashMap<>();
         txStyle.put(PrinterAttributes.KEY_ALIGN, PrinterAttributes.VAL_ALIGN_CENTER);
         txStyle.put(PrinterAttributes.KEY_TYPEFACE, 0);
         txStyle.put(PrinterAttributes.KEY_TEXT_SIZE, 20);
-        printerManager.printImage(QRCodeUtil.encodeAsBitmap(code,240,240),txStyle,printerListener);
+        printerManager.printImage(QRCodeUtil.encodeAsBitmap(text,size,size),txStyle,printerListener);
     }
 
     @ReactMethod

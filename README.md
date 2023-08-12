@@ -91,6 +91,11 @@ Print an image using machine printter.
 * encodedImage: Image encoded with base64 to print;
 * style: style of image;
 
+### printQRCode(text, size = 360)
+Print a QRCode using machine printter.
+* text: String to print;
+* size: size of QRCode;
+
 ### addListener()
 
 

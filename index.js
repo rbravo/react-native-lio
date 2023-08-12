@@ -100,6 +100,10 @@ const printImage = (encodedImage, style = {}) => {
     return NativeModules.Lio.printImage(encodedImage, style)
 }
 
+const printQRCode = (text, size = 360) => {
+    return NativeModules.Lio.printQRCode(text, size)
+}
+
 const unbind = () => {
     return NativeModules.Lio.unbind()
 }
@@ -110,7 +114,7 @@ const addListener = (event, callback) => {
 
 export default {
     Lio, setup, getMachineInformation, getOrderList, createDraftOrder,
-    addItems, placeOrder, checkoutOrder, printText, printImage, unbind,
+    addItems, placeOrder, checkoutOrder, printText, printImage, printQRCode, unbind,
     requestPaymentCrashCredit, requestPaymentCreditInstallment, requestPaymentDebit, cancelPayment,
     addListener, LioEvents,
     ServiceState, PaymentState, PaymentStatus, CancellationState,
