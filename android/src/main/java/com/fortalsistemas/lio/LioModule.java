@@ -526,8 +526,8 @@ public class LioModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void printQRCode(String text, int size, ReadableMap style){
         Log.d(TAG, "PRINT QRCODE: " + text);
-        printerManager = new PrinterManager(this.reactContext);
-        printerManager.printImage(QRCodeUtil.encodeAsBitmap(text,size,size),getTextAlign(style),printerListener);
+        PrinterManager printerManager = new PrinterManager(this.reactContext);
+        printerManager.printImage(QRCodeUtil.encodeAsBitmap(text,size,size),getTextAlign(style),createPrinterListener());
     }
 
     @ReactMethod
