@@ -60,6 +60,10 @@ const requestPaymentCreditInstallment = (amount, orderId, installments) => {
     return NativeModules.Lio.requestPaymentCreditInstallment(amount, orderId, installments)
 }
 
+const requestPaymentCredit = (amount, orderId) => {
+    return NativeModules.Lio.requestPaymentCredit(amount, orderId)
+}
+
 const requestPaymentDebit = (amount, orderId) => {
     return NativeModules.Lio.requestPaymentDebit(amount, orderId)
 }
@@ -115,7 +119,7 @@ const addListener = (event, callback) => {
 export default {
     Lio, setup, getMachineInformation, getOrderList, createDraftOrder,
     addItems, placeOrder, checkoutOrder, printText, printImage, printQRCode, unbind,
-    requestPaymentCrashCredit, requestPaymentCreditInstallment, requestPaymentDebit, cancelPayment,
+    requestPaymentCrashCredit, requestPaymentCreditInstallment, requestPaymentDebit, requestPaymentCredit, cancelPayment,
     addListener, LioEvents,
     ServiceState, PaymentState, PaymentStatus, CancellationState,
     PrintStyles,

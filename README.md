@@ -49,6 +49,11 @@ Request payment with credit on sight.
 *amout, value to pay;
 *orderId, order number to transaction;
 
+### requestPaymentCredit(amount, orderId)
+Request payment with credit in installments. 
+*amout, value to pay;
+*orderId, order number to transaction;
+
 ### requestPaymentCreditInstallment(amount, orderId, installments)
 Request payment with credit in installments. 
 *amout, value to pay;
