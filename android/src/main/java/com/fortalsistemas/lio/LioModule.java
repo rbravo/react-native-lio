@@ -16,6 +16,12 @@ import android.graphics.BitmapFactory;
 import android.util.Base64;
 import android.util.Log;
 
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import java.io.ByteArrayOutputStream;
+
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
@@ -528,6 +534,44 @@ public class LioModule extends ReactContextBaseJavaModule {
         Log.d(TAG, "PRINT QRCODE: " + text);
         PrinterManager printerManager = new PrinterManager(this.reactContext);
         printerManager.printImage(QRCodeUtil.encodeAsBitmap(text,size,size),getTextAlign(style),createPrinterListener());
+    }
+
+    @ReactMethod
+    public void printPhoto(String encodedImage, ReadableMap style) {
+        Log.d(TAG, "PRINT IMAGE");
+        PrinterManager printerManager = new PrinterManager(this.reactContext);
+
+        String base64BW = resizeAndConvertToGrayscale(encodedImage, 240);
+        byte[] decodedString = Base64.decode(base64BW, Base64.DEFAULT);
+        Bitmap bitmapImage = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        printerManager.printImage(bitmapImage, getTextAlign(style), createPrinterListener());
+    }
+
+    @ReactMethod
+    public String resizeAndConvertToGrayscale(String base64Image, int newSize) {
+        // Step 1: Decode the base64 string to Bitmap
+        byte[] decodedByte = Base64.decode(base64Image, 0);
+        Bitmap originalBitmap = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
+        
+        // Step 2: Resize the Bitmap to newSize x newSize
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, newSize, newSize, true);
+        
+        // Step 3: Convert the Bitmap to grayscale
+        ColorMatrix colorMatrix = new ColorMatrix();
+        colorMatrix.setSaturation(0);
+        ColorMatrixColorFilter colorFilter = new ColorMatrixColorFilter(colorMatrix);
+        Paint paint = new Paint();
+        paint.setColorFilter(colorFilter);
+        
+        Bitmap grayscaleBitmap = Bitmap.createBitmap(newSize, newSize, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(grayscaleBitmap);
+        canvas.drawBitmap(resizedBitmap, 0, 0, paint);
+        
+        // Step 4: Encode grayscale Bitmap back to base64 string
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        grayscaleBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
 
     @ReactMethod
