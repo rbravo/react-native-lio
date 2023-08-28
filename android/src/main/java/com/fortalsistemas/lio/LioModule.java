@@ -549,23 +549,30 @@ public class LioModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public String resizeAndConvertToGrayscale(String base64Image, int newSize) {
-        // Step 1: Decode the base64 string to Bitmap
+         // Step 1: Decode the base64 string to Bitmap
         byte[] decodedByte = Base64.decode(base64Image, 0);
         Bitmap originalBitmap = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
         
         // Step 2: Resize the Bitmap to newSize x newSize
         Bitmap resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, newSize, newSize, true);
         
-        // Step 3: Convert the Bitmap to grayscale
-        ColorMatrix colorMatrix = new ColorMatrix();
-        colorMatrix.setSaturation(0);
-        ColorMatrixColorFilter colorFilter = new ColorMatrixColorFilter(colorMatrix);
-        Paint paint = new Paint();
-        paint.setColorFilter(colorFilter);
+        // Step 3: Convert the Bitmap to grayscale using a weighted luminance method
+        int width = resizedBitmap.getWidth();
+        int height = resizedBitmap.getHeight();
+        Bitmap grayscaleBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         
-        Bitmap grayscaleBitmap = Bitmap.createBitmap(newSize, newSize, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(grayscaleBitmap);
-        canvas.drawBitmap(resizedBitmap, 0, 0, paint);
+        for (int x = 0; x < width; ++x) {
+            for (int y = 0; y < height; ++y) {
+                int color = resizedBitmap.getPixel(x, y);
+                int red = Color.red(color);
+                int green = Color.green(color);
+                int blue = Color.blue(color);
+                
+                // Calculate luminance of pixel
+                int gray = (int) (0.299 * red + 0.587 * green + 0.114 * blue);
+                grayscaleBitmap.setPixel(x, y, Color.rgb(gray, gray, gray));
+            }
+        }
         
         // Step 4: Encode grayscale Bitmap back to base64 string
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
